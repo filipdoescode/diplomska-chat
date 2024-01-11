@@ -11,7 +11,7 @@
     "build:client": "vite build --outDir dist/app/client",
     "build:server": "tsc -p tsconfig.server.json && vite build --ssr src/entry-server.tsx --outDir dist/entry",
     "clean": "rimraf dist",
-    "serve": "cross-env NODE_ENV=production node ./dist/app/server"
+    "start": "cross-env NODE_ENV=production node ./dist/app/server"
   },
   "dependencies": {
     "@types/serve-static": "^1.15.5",
