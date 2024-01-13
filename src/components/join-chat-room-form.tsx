@@ -39,17 +39,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-interface JoinChatRoomProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  defaultOpen?: boolean;
-}
-
-export function JoinChatRoomForm({
-  open,
-  defaultOpen = false,
-  onOpenChange,
-}: JoinChatRoomProps) {
+export function JoinChatRoomForm() {
   const { enterRoom } = useChat();
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -64,7 +54,7 @@ export function JoinChatRoomForm({
   }
 
   return (
-    <Dialog open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
+    <Dialog open>
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
           <DialogTitle>Влези во соба за разговор</DialogTitle>
