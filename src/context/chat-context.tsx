@@ -44,8 +44,6 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const [messages, setMessages] = useState<Message[]>(chatDefaults.messages);
   const [userList, setUserList] = useState<User[]>(chatDefaults.userList);
 
-  console.log('[user]', userList);
-
   function connect() {
     socket.connect();
   }
