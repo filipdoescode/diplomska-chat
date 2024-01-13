@@ -27,7 +27,8 @@
     "src/**/*",
     "types/*",
     "node_modules/vite/types/*",
-    "server/app.ts"
+    "server/app.ts",
+    "server/features/*"
   ],
   "exclude": ["node_modules", "dist"],
   "ts-node": {

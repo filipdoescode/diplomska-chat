@@ -20,7 +20,6 @@ export function buildMsg(name: string, text: string) {
   };
 }
 
-// User functions
 export function activateUser({ id, name, room }: User) {
   const user = { id, name, room };
   UsersState.setUsers([

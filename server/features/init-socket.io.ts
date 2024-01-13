@@ -1,18 +1,20 @@
 import { Server } from 'socket.io';
-import { User } from '../../types';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+
 import {
-  activateUser,
-  buildMsg,
   getAllActiveRooms,
   getUser,
+  activateUser,
   getUsersInRoom,
   userLeavesApp,
-} from './chat';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+  buildMsg,
+} from './chat.js';
+
+import { User } from '../../types/index';
 
 const ADMIN = 'Admin';
 
-export function initSocketIo(
+export default function initSocketIo(
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 ) {
   io.on('connection', (socket) => {

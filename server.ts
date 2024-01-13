@@ -6,7 +6,8 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 import api from './server/app.js';
-import { initSocketIo } from './server/features/init-socket.io.js';
+
+import initSocketIo from './server/features/init-socket.io.js';
 
 const __dirname: string = path.dirname(fileURLToPath(import.meta.url));
 const isTest = process.env.VITEST;
