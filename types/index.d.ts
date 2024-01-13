@@ -12,3 +12,20 @@ export type SiteConfig = {
     github: string;
   };
 };
+
+export type User = {
+  id: string;
+  name: string;
+  room: string;
+};
+
+interface UserState {
+  users: User[];
+  setUsers: (newUsers: User[]) => void;
+}
+
+export type Message = {
+  name: string;
+  text: string;
+  time: string;
+};

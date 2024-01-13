@@ -1,24 +1,26 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 import { Chat } from '@/src/components/chat';
+import { JoinChatRoom } from '@/src/components/join-chat-room';
 
-import { socket } from '@/src/socket';
+import { useChat } from '@/src/hooks/useChat';
 
 function App() {
-  useEffect(() => {
-    function onConnect() {
-      console.log('[connected]');
-    }
-    socket.on('connect', onConnect);
+  const { connected } = useChat();
 
-    return () => {
-      socket.off('connect', onConnect);
-    };
-  }, []);
+  const [open, setOpen] = useState(true);
+
+  function onOpenChange(open: boolean) {
+    setOpen(open);
+  }
 
   return (
     <main className='h-[calc(100vh-69.98px)] p-10'>
-      <Chat />
+      {connected ? (
+        <Chat />
+      ) : (
+        <JoinChatRoom open={open} onOpenChange={onOpenChange} />
+      )}
     </main>
   );
 }

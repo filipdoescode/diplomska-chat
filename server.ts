@@ -6,6 +6,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 import api from './server/app.js';
+import { initSocketIo } from './server/features/init-socket.io.js';
 
 const __dirname: string = path.dirname(fileURLToPath(import.meta.url));
 const isTest = process.env.VITEST;
@@ -55,9 +56,7 @@ const createServer = async () => {
     );
   }
 
-  io.on('connection', (socket) => {
-    console.log('[user has connected]', socket.data);
-  });
+  initSocketIo(io);
 
   // api routes
   app.use('/api', api.router);
