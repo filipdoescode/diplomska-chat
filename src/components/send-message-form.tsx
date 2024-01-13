@@ -32,6 +32,8 @@ export function SendMessageForm() {
 
   function onSubmit(data: FormData) {
     sendMessage(connection.name, data.message);
+
+    form.reset();
   }
 
   return (

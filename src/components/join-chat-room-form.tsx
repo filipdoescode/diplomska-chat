@@ -109,7 +109,7 @@ export function JoinChatRoomForm({
                     </FormControl>
                     <SelectContent>
                       {roomsList.map((room) => (
-                        <SelectItem value={room.id}>{room.name}</SelectItem>
+                        <SelectItem value={room.name}>{room.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

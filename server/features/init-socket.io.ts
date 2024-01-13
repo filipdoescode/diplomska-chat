@@ -21,7 +21,10 @@ export default function initSocketIo(
     console.log(`User ${socket.id} connected`);
 
     // Upon connection - only to user
-    socket.emit('message', buildMsg(ADMIN, 'Welcome to Chat App!'));
+    socket.emit(
+      'message',
+      buildMsg(ADMIN, 'Добредојте во Разговарај со славјански :)')
+    );
 
     socket.on('enterRoom', ({ name, room }: User) => {
       // leave previous room
@@ -50,13 +53,13 @@ export default function initSocketIo(
       // To user who joined
       socket.emit(
         'message',
-        buildMsg(ADMIN, `You have joined the ${user.room} chat room`)
+        buildMsg(ADMIN, `Ти се приклучи во собата: ${user.room} `)
       );
 
       // To everyone else
       socket.broadcast
         .to(user.room)
-        .emit('message', buildMsg(ADMIN, `${user.name} has joined the room`));
+        .emit('message', buildMsg(ADMIN, `${user.name} влезе во собата!`));
 
       // Update user list for room
       io.to(user.room).emit('userList', {
@@ -77,7 +80,7 @@ export default function initSocketIo(
       if (user) {
         io.to(user.room).emit(
           'message',
-          buildMsg(ADMIN, `${user.name} has left the room`)
+          buildMsg(ADMIN, `${user.name} ја напушти собата!`)
         );
 
         io.to(user.room).emit('userList', {
