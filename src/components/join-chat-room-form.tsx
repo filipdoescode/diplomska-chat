@@ -1,6 +1,6 @@
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
 import { Button } from '@/src/components/ui/button';
 import {
@@ -15,7 +15,6 @@ import { Input } from '@/src/components/ui/input';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,10 +22,19 @@ import {
 } from '@/src/components/ui/form';
 
 import { useChat } from '@/src/hooks/useChat';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/src/components/ui/select';
+
+import { roomsList } from '@/src/config/chat';
 
 const schema = z.object({
   name: z.string().min(3, 'Името мора да има најмалку 3 карактери'),
-  room: z.string().min(3, 'Името на собата мора да има најмалку 3 карактери'),
+  room: z.string().min(1, 'Собата е задолжителна'),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -37,7 +45,7 @@ interface JoinChatRoomProps {
   defaultOpen?: boolean;
 }
 
-export function JoinChatRoom({
+export function JoinChatRoomForm({
   open,
   defaultOpen = false,
   onOpenChange,
@@ -45,6 +53,10 @@ export function JoinChatRoom({
   const { enterRoom } = useChat();
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      name: '',
+      room: '',
+    },
   });
 
   function onSubmit(data: FormData) {
@@ -61,24 +73,10 @@ export function JoinChatRoom({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
-              control={form.control}
-              name='room'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Соба</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Соба' {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Ова е собата во која се приклучиш.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+          <form
+            className='flex flex-col gap-6'
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <FormField
               control={form.control}
               name='name'
@@ -88,15 +86,40 @@ export function JoinChatRoom({
                   <FormControl>
                     <Input placeholder='Име' {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Ова е името со кое ќе се прикажуваш во собата.
-                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <DialogFooter className='flex mt-6'>
+            <FormField
+              control={form.control}
+              name='room'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Соба</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Одбери соба' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {roomsList.map((room) => (
+                        <SelectItem value={room.id}>{room.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter className='flex'>
               <Button type='submit' className='w-full'>
                 Влези во собата
               </Button>

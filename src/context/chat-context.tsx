@@ -2,8 +2,14 @@ import React, { createContext, useEffect, useState } from 'react';
 import { socket } from '../socket';
 import { Message, User } from '@/types';
 
-interface ChatContextProps {
+type Connection = {
   connected: boolean;
+  name: string;
+  room: string;
+};
+
+interface ChatContextProps {
+  connection: Connection;
   messages: Message[];
   userList: User[];
   connect: () => void;
@@ -12,7 +18,11 @@ interface ChatContextProps {
 }
 
 const chatDefaults: ChatContextProps = {
-  connected: false,
+  connection: {
+    connected: false,
+    name: '',
+    room: '',
+  },
   messages: [],
   userList: [],
   connect: () => {},
@@ -27,10 +37,14 @@ interface ChatProviderProps {
 }
 
 export function ChatProvider({ children }: ChatProviderProps) {
-  const [connected, setConnected] = useState<boolean>(chatDefaults.connected);
+  const [connection, setConnection] = useState<Connection>(
+    chatDefaults.connection
+  );
 
   const [messages, setMessages] = useState<Message[]>(chatDefaults.messages);
   const [userList, setUserList] = useState<User[]>(chatDefaults.userList);
+
+  console.log('[user]', userList);
 
   function connect() {
     socket.connect();
@@ -42,7 +56,11 @@ export function ChatProvider({ children }: ChatProviderProps) {
       room,
     });
 
-    setConnected(true);
+    setConnection({
+      name,
+      room,
+      connected: true,
+    });
   }
 
   function sendMessage(name: string, text: string) {
@@ -56,7 +74,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     connect();
 
     function handleDisconnect() {
-      setConnected(false);
+      setConnection(chatDefaults.connection);
     }
 
     function handleMessages(data: Message) {
@@ -81,7 +99,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   }, []);
 
   const value = {
-    connected,
+    connection,
     messages,
     userList,
     connect,

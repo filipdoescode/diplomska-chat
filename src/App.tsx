@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 import { Chat } from '@/src/components/chat';
-import { JoinChatRoom } from '@/src/components/join-chat-room';
+import { JoinChatRoomForm } from '@/src/components/join-chat-room-form';
 
 import { useChat } from '@/src/hooks/useChat';
 
 function App() {
-  const { connected } = useChat();
+  const { connection } = useChat();
 
   const [open, setOpen] = useState(true);
 
@@ -16,10 +16,10 @@ function App() {
 
   return (
     <main className='h-[calc(100vh-69.98px)] p-10'>
-      {connected ? (
+      {connection.connected ? (
         <Chat />
       ) : (
-        <JoinChatRoom open={open} onOpenChange={onOpenChange} />
+        <JoinChatRoomForm open={open} onOpenChange={onOpenChange} />
       )}
     </main>
   );
