@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/src/components/ui/form';
 import { Input } from '@/src/components/ui/input';
-import { useChat } from '../hooks/useChat';
+import { useChat } from '@/src/hooks/useChat';
 
 const FormSchema = z.object({
   message: z.string().min(2, {

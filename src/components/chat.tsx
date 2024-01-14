@@ -1,19 +1,23 @@
 import { UserList } from '@/src/components/user-list';
 import { SendMessageForm } from '@/src/components/send-message-form';
-import { MessagesList } from './messages-list';
+import { MessagesList } from '@/src/components/messages-list';
+import { RoomsList } from '@/src/components/rooms-list';
 
 export function Chat() {
   return (
-    <div className='h-full shadow-sm border grid grid-cols-1 md:grid-cols-4'>
-      <section className='p-10 col-span-3'>
+    <section className='h-full shadow-sm border grid grid-cols-1 md:grid-cols-12'>
+      <div className='col-span-2 hidden md:block'>
+        <RoomsList />
+      </div>
+      <div className='px-10 pt-10 pb-4 col-span-8 flex flex-col justify-between border-l border-r'>
         <MessagesList />
-      </section>
-
-      <div className='overflow-auto border-t md:border-l px-6 py-10 flex flex-col justify-between'>
-        <UserList />
 
         <SendMessageForm />
       </div>
-    </div>
+
+      <div className='col-span-2 overflow-auto px-6 py-10 hidden md:flex flex-col justify-between'>
+        <UserList />
+      </div>
+    </section>
   );
 }

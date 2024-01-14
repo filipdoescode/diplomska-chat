@@ -1,5 +1,5 @@
-import { useChat } from '../hooks/useChat';
-import { cn } from '../lib/utils';
+import { useChat } from '@/src/hooks/useChat';
+import { cn } from '@/src/lib/utils';
 
 export function UserList() {
   const { userList, connection } = useChat();
@@ -8,9 +8,15 @@ export function UserList() {
 
   if (userList.length > 0) {
     content = (
-      <ul className='overflow-auto'>
+      <ul className='overflow-auto flex flex-col gap-2'>
         {userList.map((user) => (
-          <li key={user.id}>
+          <li key={user.id} className='flex items-center gap-2'>
+            <span>
+              <img
+                src={`https://avatar.iran.liara.run/public/boy?username=${user.name}`}
+                width={32}
+              />
+            </span>
             <p
               className={cn(
                 connection.name === user.name ? 'text-green-600' : 'text-black',

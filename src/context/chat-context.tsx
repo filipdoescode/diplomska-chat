@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { socket } from '../socket';
+import { socket } from '@/src/socket';
+
 import { Message, User } from '@/types';
 
 type Connection = {
@@ -8,7 +9,7 @@ type Connection = {
   room: string;
 };
 
-interface ChatContextProps {
+export interface ChatContextProps {
   connection: Connection;
   messages: Message[];
   userList: User[];
@@ -49,6 +50,9 @@ export function ChatProvider({ children }: ChatProviderProps) {
   }
 
   function enterRoom(name: string, room: string) {
+    setUserList([]);
+    setMessages([]);
+
     socket.emit('enterRoom', {
       name,
       room,

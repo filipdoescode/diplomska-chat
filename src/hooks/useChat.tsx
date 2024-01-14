@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
-import { ChatContext } from '@/src/context/chat-context';
+import { ChatContext, type ChatContextProps } from '@/src/context/chat-context';
 
-export function useChat() {
+export function useChat(): ChatContextProps {
   const chatContext = useContext(ChatContext);
 
   if (!chatContext) {
