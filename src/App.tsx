@@ -7,7 +7,7 @@ function App() {
   const { connection } = useChat();
 
   return (
-    <main className='h-[calc(100vh-69.98px)] p-10'>
+    <main className='h-[calc(100vh-69.98px)] md:p-10'>
       {connection.connected ? <Chat /> : <JoinChatRoomForm />}
     </main>
   );
