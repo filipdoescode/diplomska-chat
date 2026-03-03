@@ -13,14 +13,14 @@ export function UserList() {
           <li key={user.id} className='flex items-center gap-2'>
             <span>
               <img
-                src={`https://avatar.iran.liara.run/public/boy?username=${user.name}`}
+                src={`https://api.dicebear.com/9.x/adventurer/svg?flip=true&backgroundType=gradientLinear,solid&skinColor=ecad80,f2d3b1&backgroundColor=b6e3f4,transparent&seed=${user.name}`}
                 width={32}
               />
             </span>
             <p
               className={cn(
                 connection.name === user.name ? 'text-green-600' : 'text-black',
-                'font-semibold'
+                'font-semibold',
               )}
             >
               {user.name}
@@ -32,5 +32,10 @@ export function UserList() {
   } else {
     content = <p className='font-semibold'>Нема поврзани корисници!</p>;
   }
-  return content;
+  return (
+    <div>
+      <h2>Активни корисници:</h2>
+      {content}
+    </div>
+  );
 }

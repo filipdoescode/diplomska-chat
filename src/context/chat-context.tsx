@@ -16,6 +16,7 @@ export interface ChatContextProps {
   connect: () => void;
   enterRoom(name: string, room: string): void;
   sendMessage(name: string, text: string): void;
+  handleDisconnect(): void;
 }
 
 const chatDefaults: ChatContextProps = {
@@ -29,6 +30,7 @@ const chatDefaults: ChatContextProps = {
   connect: () => {},
   enterRoom: () => {},
   sendMessage: () => {},
+  handleDisconnect: () => {},
 };
 
 export const ChatContext = createContext<ChatContextProps>(chatDefaults);
@@ -39,7 +41,7 @@ interface ChatProviderProps {
 
 export function ChatProvider({ children }: ChatProviderProps) {
   const [connection, setConnection] = useState<Connection>(
-    chatDefaults.connection
+    chatDefaults.connection,
   );
 
   const [messages, setMessages] = useState<Message[]>(chatDefaults.messages);
@@ -72,12 +74,12 @@ export function ChatProvider({ children }: ChatProviderProps) {
     });
   }
 
+  function handleDisconnect() {
+    setConnection(chatDefaults.connection);
+  }
+
   useEffect(() => {
     connect();
-
-    function handleDisconnect() {
-      setConnection(chatDefaults.connection);
-    }
 
     function handleMessages(data: Message) {
       setMessages((prev) => [...prev, data]);
@@ -107,6 +109,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     connect,
     enterRoom,
     sendMessage,
+    handleDisconnect,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
