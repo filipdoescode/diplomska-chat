@@ -75,6 +75,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   }
 
   function handleDisconnect() {
+    socket.disconnect();
     setConnection(chatDefaults.connection);
   }
 
