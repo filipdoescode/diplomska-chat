@@ -13,10 +13,12 @@ export interface ChatContextProps {
   connection: Connection;
   messages: Message[];
   userList: User[];
+  typingUsers: string[];
   connect: () => void;
   enterRoom(name: string, room: string): void;
   sendMessage(name: string, text: string): void;
   handleDisconnect(): void;
+  emitTyping(name: string): void;
 }
 
 const chatDefaults: ChatContextProps = {
@@ -27,10 +29,12 @@ const chatDefaults: ChatContextProps = {
   },
   messages: [],
   userList: [],
+  typingUsers: [],
   connect: () => {},
   enterRoom: () => {},
   sendMessage: () => {},
   handleDisconnect: () => {},
+  emitTyping: () => {},
 };
 
 export const ChatContext = createContext<ChatContextProps>(chatDefaults);
@@ -46,6 +50,9 @@ export function ChatProvider({ children }: ChatProviderProps) {
 
   const [messages, setMessages] = useState<Message[]>(chatDefaults.messages);
   const [userList, setUserList] = useState<User[]>(chatDefaults.userList);
+  const [typingUsers, setTypingUsers] = useState<string[]>(
+    chatDefaults.typingUsers,
+  );
 
   function connect() {
     socket.connect();
@@ -79,6 +86,10 @@ export function ChatProvider({ children }: ChatProviderProps) {
     setConnection(chatDefaults.connection);
   }
 
+  function emitTyping(name: string) {
+    socket.emit('activity', name);
+  }
+
   useEffect(() => {
     connect();
 
@@ -90,15 +101,32 @@ export function ChatProvider({ children }: ChatProviderProps) {
       setUserList(data.users);
     }
 
+    function handleActivity(name: string) {
+      setTypingUsers((prev) => {
+        if (!prev.includes(name)) {
+          return [...prev, name];
+        }
+        return prev;
+      });
+
+      // Clear typing indicator after 3 seconds of inactivity
+      setTimeout(() => {
+        setTypingUsers((prev) => prev.filter((user) => user !== name));
+      }, 3000);
+    }
+
     socket.on('message', handleMessages);
 
     socket.on('userList', handleUsersList);
+
+    socket.on('activity', handleActivity);
 
     socket.on('disconnect', handleDisconnect);
 
     return () => {
       socket.off('message', handleMessages);
       socket.off('userList', handleUsersList);
+      socket.off('activity', handleActivity);
       socket.off('disconnect', handleDisconnect);
     };
   }, []);
@@ -107,10 +135,12 @@ export function ChatProvider({ children }: ChatProviderProps) {
     connection,
     messages,
     userList,
+    typingUsers,
     connect,
     enterRoom,
     sendMessage,
     handleDisconnect,
+    emitTyping,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

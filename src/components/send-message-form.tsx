@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useRef } from 'react';
 import * as z from 'zod';
 
 import { Button } from '@/src/components/ui/button';
@@ -22,7 +23,9 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 export function SendMessageForm() {
-  const { sendMessage, connection } = useChat();
+  const { sendMessage, connection, emitTyping } = useChat();
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -30,10 +33,30 @@ export function SendMessageForm() {
     },
   });
 
+  function handleTyping() {
+    emitTyping(connection.name);
+
+    // Clear existing timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Set new timeout to stop emitting after 3 seconds
+    typingTimeoutRef.current = setTimeout(() => {
+      typingTimeoutRef.current = null;
+    }, 3000);
+  }
+
   function onSubmit(data: FormData) {
     sendMessage(connection.name, data.message);
 
     form.reset();
+
+    // Clear typing timeout on submit
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
   }
 
   return (
@@ -48,7 +71,14 @@ export function SendMessageForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='Порака' {...field} />
+                <Input
+                  placeholder='Порака'
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    handleTyping();
+                  }}
+                />
               </FormControl>
 
               <FormMessage />
