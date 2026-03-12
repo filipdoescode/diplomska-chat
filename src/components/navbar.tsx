@@ -11,14 +11,29 @@ import { Button } from '@/src/components/ui/button';
 import { UserList } from '@/src/components/user-list';
 import { RoomsList } from '@/src/components/rooms-list';
 
+import { useChat } from '@/src/hooks/useChat';
+
 export function Navbar() {
+  const { connection, handleDisconnect } = useChat();
+
   return (
     <nav className='w-full flex justify-between'>
-      <h3 className='font-semibold text-lg'>Разговарај со славјански</h3>
+      <h3 className='font-semibold text-lg'>Разговарај со Славјански</h3>
+
+      {connection.connected && (
+        <Button
+          onClick={handleDisconnect}
+          variant='destructive'
+          size='sm'
+          className='max-md:my-auto max-md:mr-5 md:h-auto'
+        >
+          Одјави се
+        </Button>
+      )}
 
       <Drawer>
         <DrawerTrigger asChild>
-          <button className='md:hidden bg-gray-100 px-1 hover:bg-gray-200'>
+          <button className='md:hidden  px-1 hover:bg-gray-200'>
             <Icons.menu />
           </button>
         </DrawerTrigger>

@@ -15,7 +15,7 @@ import { User } from '../../types/index';
 const ADMIN = 'Admin';
 
 export default function initSocketIo(
-  io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+  io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
 ) {
   io.on('connection', (socket) => {
     console.log(`User ${socket.id} connected`);
@@ -23,7 +23,7 @@ export default function initSocketIo(
     // Upon connection - only to user
     socket.emit(
       'message',
-      buildMsg(ADMIN, 'Добредојте во Разговарај со славјански :)')
+      buildMsg(ADMIN, 'Добредојте во Разговарај со Славјански :)'),
     );
 
     socket.on('enterRoom', ({ name, room }: User) => {
@@ -34,7 +34,7 @@ export default function initSocketIo(
         socket.leave(prevRoom);
         io.to(prevRoom).emit(
           'message',
-          buildMsg(ADMIN, `${name} has left the room`)
+          buildMsg(ADMIN, `${name} has left the room`),
         );
       }
 
@@ -53,7 +53,7 @@ export default function initSocketIo(
       // To user who joined
       socket.emit(
         'message',
-        buildMsg(ADMIN, `Ти се приклучи во собата: ${user.room} `)
+        buildMsg(ADMIN, `Ти се приклучи во собата: ${user.room} `),
       );
 
       // To everyone else
@@ -80,7 +80,7 @@ export default function initSocketIo(
       if (user) {
         io.to(user.room).emit(
           'message',
-          buildMsg(ADMIN, `${user.name} ја напушти собата!`)
+          buildMsg(ADMIN, `${user.name} ја напушти собата!`),
         );
 
         io.to(user.room).emit('userList', {
